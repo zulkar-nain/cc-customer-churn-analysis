@@ -1,0 +1,1 @@
+{"metrics":{"roc_auc":0.9855,"pr_auc":0.9298,"accuracy":0.9561,"recall":0.8742,"precision":0.8559},"confusion":{"tp":285,"fp":48,"fn":41,"tn":1652},"risk_bands":{"Low":1576,"Medium":157,"High":293},"n_test":2026,"churn_rate":0.1609}

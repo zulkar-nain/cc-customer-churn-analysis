@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Churn Customer Simulator</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="top">
+    <div class="wrap">
+      <div class="nav">
+        <span class="brand">Credit Card Churn</span>
+        <a class="btn ghost" href="index.html">&larr; Model results</a>
+      </div>
+      <div class="hero" style="padding-bottom:32px">
+        <h1>Customer simulator</h1>
+        <p>Adjust a customer's profile and see the model's predicted churn risk. All other attributes stay at a typical customer's values.</p>
+      </div>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <div id="error" class="error" hidden></div>
+    <section>
+      <div class="grid sim">
+        <div class="card" id="sliders"><h3>Customer profile</h3></div>
+        <div>
+          <div class="card gauge">
+            <h3>Predicted churn probability</h3>
+            <div class="big" id="prob">-</div>
+            <div class="level" id="level"></div>
+            <p class="hint">Typical customer: <span id="base-prob"></span></p>
+          </div>
+          <div class="card impact" style="margin-top:16px">
+            <h3>What is moving the risk?</h3>
+            <div id="impact"></div>
+            <p class="hint">Each bar shows how much the risk changes versus resetting that one feature to the typical value. Red raises risk, green lowers it. This is a what-if comparison from pre-scored profiles, not SHAP.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>Predictions are pre-computed by the R model on a grid of profiles; sliders snap to grid values.</footer>
+  <script src="simulator.js"></script>
+</body>
+</html>

@@ -35,6 +35,27 @@ function renderBands({ risk_bands: b, n_test: n }) {
     .join("");
 }
 
+function renderCards(rows) {
+  const chips = (r) => [
+    ["Age", r.customer_age],
+    ["Transactions", r.total_trans_ct],
+    ["Inactive", r.months_inactive_12_mon + " mo"],
+    ["Utilization", pct(r.avg_utilization_ratio)],
+    ["Products", r.total_relationship_count],
+    ["Contacts", r.contacts_count_12_mon],
+  ].map(([k, v]) => `<span class="chip"><b>${v}</b> ${k}</span>`).join("");
+
+  document.getElementById("risk-cards").innerHTML = rows.slice(0, 6).map((r, i) => `
+    <div class="card risk-card">
+      <div class="ring" style="--p:${r.churn_probability * 100}"><span>${Math.round(r.churn_probability * 100)}%</span></div>
+      <div>
+        <div class="rc-title">Customer #${i + 1} <span class="pill ${r.risk}">${r.risk}</span></div>
+        <div class="chips">${chips(r)}</div>
+        <div class="hint">${r.actual === "Churned" ? "Actually left" : "Actually stayed"}</div>
+      </div>
+    </div>`).join("");
+}
+
 function renderTable(rows) {
   const table = document.getElementById("top-table");
   const cols = Object.keys(rows[0]);
@@ -55,6 +76,43 @@ function renderTable(rows) {
   draw();
 }
 
+function initLightbox() {
+  const box = document.createElement("div");
+  box.className = "lightbox";
+  box.setAttribute("role", "dialog");
+  box.setAttribute("aria-modal", "true");
+  box.innerHTML = '<button class="close" aria-label="Close image">&times;</button><img alt="">';
+  document.body.appendChild(box);
+  const big = box.querySelector("img");
+  let opener = null;
+
+  const close = () => {
+    box.classList.remove("open");
+    document.body.classList.remove("no-scroll");
+    if (opener) opener.focus();
+  };
+  const open = (img) => {
+    opener = img;
+    big.src = img.src;
+    big.alt = img.alt;
+    box.classList.add("open");
+    document.body.classList.add("no-scroll");
+    box.querySelector(".close").focus();
+  };
+
+  document.querySelectorAll(".card img").forEach((img) => {
+    img.dataset.zoom = "";
+    img.tabIndex = 0;
+    img.title = "Click to enlarge";
+    img.addEventListener("click", () => open(img));
+    img.addEventListener("keydown", (e) => (e.key === "Enter" || e.key === " ") && (e.preventDefault(), open(img)));
+  });
+  box.addEventListener("click", close);
+  document.addEventListener("keydown", (e) => e.key === "Escape" && box.classList.contains("open") && close());
+}
+
+initLightbox();
+
 (async () => {
   try {
     const [summary, top] = await Promise.all([load("data/summary.json"), load("data/top_risk.json")]);
@@ -62,6 +120,7 @@ function renderTable(rows) {
     renderConfusion(summary);
     renderBands(summary);
     renderTable(top);
+    renderCards(top);
   } catch (e) {
     const box = document.getElementById("error");
     box.hidden = false;

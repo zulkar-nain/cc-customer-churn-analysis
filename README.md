@@ -71,14 +71,3 @@ shiny::runApp(source("R/04_app.R")$value)
 
 - **Batch Predictor**: upload a CSV with the BankChurners columns to get churn probabilities and risk bands; download the results.
 - **Customer Simulator**: adjust transaction count, inactive months, utilization and more to see churn risk and a SHAP breakdown update live.
-
-## Static website (GitHub Pages)
-
-`docs/` holds a static site: `index.html` (results, charts, high-risk customers, SHAP plots) with a button to `simulator.html` (sliders that look up pre-scored model predictions and show a what-if impact per feature).
-
-```bash
-Rscript R/05_export_web.R          # refresh docs/data and docs/img from the trained model
-python -m http.server -d docs      # preview at http://localhost:8000
-```
-
-To publish, push and set Settings > Pages > Source to the `main` branch and `/docs` folder. The site contains only aggregated results and anonymous feature rows, not the raw dataset.

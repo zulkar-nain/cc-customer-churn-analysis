@@ -39,7 +39,7 @@ high_risk <- select(test, -attrition_flag)[top_idx, ]
 
 message("[03] Computing SHAP values for ", nrow(high_risk), " high-risk customers ...")
 for (i in seq_len(nrow(high_risk))) {
-  shap <- predict_parts(explainer, new_observation = high_risk[i, ], type = "shap", B = 25)
+  shap <- predict_parts(explainer, new_observation = high_risk[i, ], type = "shap", B = 10)
   p <- plot(shap, max_features = 10) +
     labs(title = sprintf("Customer %d: churn probability %.2f", i, risk[top_idx[i]]))
   ggsave(sprintf("outputs/shap_customer_%d.png", i), p, width = 8, height = 5, dpi = 150)

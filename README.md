@@ -45,7 +45,7 @@ Or run each script in order: `R/01_preprocessing.R`, `R/02_model_training.R`, `R
 ## Methodology
 
 1. **Preprocessing**: column names cleaned with `janitor`; `CLIENTNUM` and the Naive Bayes leakage columns removed; `Attrition_Flag` becomes a factor with levels `Churned` (event) and `Active`; stratified 80/20 split with `rsample`.
-2. **Modelling**: a `recipe` one-hot encodes categoricals, drops zero-variance columns, normalises numerics and applies `themis::step_smote` to balance classes (training only; skipped at prediction time). A 500-tree `ranger` random forest is fit in a `workflow`.
+2. **Modelling**: a `recipe` one-hot encodes categoricals, drops zero-variance columns, normalises numerics and applies `themis::step_smote` to balance classes (training only; skipped at prediction time). A 200-tree `ranger` random forest is fit in a `workflow`.
 3. **Evaluation**: ROC-AUC and PR-AUC (the more informative metric for the ~16% churn rate) plus accuracy, precision and recall on the test set. Results are written to `outputs/`.
 4. **Explainability**: `model_parts` gives permutation importance (drop in 1 - AUC loss); `predict_parts(type = "shap")` explains the three highest-risk test customers.
 
@@ -55,6 +55,12 @@ After running the pipeline (the app needs `models/churn_workflow.rds`):
 
 ```bash
 bash app.sh
+```
+
+On Windows without Git Bash or a WSL distribution, run this from PowerShell at the project root instead:
+
+```powershell
+Rscript -e "shiny::runApp(source('R/04_app.R')`$value, launch.browser = TRUE)"
 ```
 
 or from R at the project root:

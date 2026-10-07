@@ -22,7 +22,7 @@ churn_recipe <- recipe(attrition_flag ~ ., data = train) |>
   step_normalize(all_numeric_predictors()) |>
   step_smote(attrition_flag, over_ratio = 1)
 
-rf_spec <- rand_forest(trees = 500, mtry = 6, min_n = 5) |>
+rf_spec <- rand_forest(trees = 200, mtry = 6, min_n = 10) |>
   set_engine("ranger", importance = "impurity", num.threads = parallel::detectCores() - 1) |>
   set_mode("classification")
 

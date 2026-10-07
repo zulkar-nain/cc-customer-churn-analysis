@@ -154,7 +154,7 @@ server <- function(input, output, session) {
   # SHAP is slower, so debounce slider movement
   profile_slow <- debounce(profile, 600)
   output$sim_shap <- renderPlot({
-    shap <- predict_parts(explainer, new_observation = profile_slow(), type = "shap", B = 15)
+    shap <- predict_parts(explainer, new_observation = profile_slow(), type = "shap", B = 5)
     plot(shap, max_features = 10)
   })
 }
